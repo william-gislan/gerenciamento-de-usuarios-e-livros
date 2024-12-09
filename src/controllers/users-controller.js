@@ -46,13 +46,13 @@ const userController = {
     const authHeader = req.headers.authorization
 
     if(!authHeader){
-      res.status(401).json({message:'Authorization header required'})
+      return res.status(401).json({message:'Authorization header required'})
     }
     console.log(authHeader)
-    const [ hastype, hash ] = authHeader.split(' ')[1]
+    const [ hastype, hash ] = authHeader.split(' ')
 
     if(hastype !== 'Basic'){
-      res.status(400).json('Invalid authorization')
+      return res.status(400).json('Invalid authorization')
     }
 
     const [ email, password ] = Buffer.from(hash, 'base64').toString().split(':')
@@ -60,13 +60,13 @@ const userController = {
     const emailVerify = usersModel.getUserEmail(email)
 
     if(!emailVerify){
-      res.status(401).json({message:'User not found'})
+      return res.status(401).json({message:'User not found'})
     }
 
     const isValidPassword = bcrypt.compareSync(password, emailVerify.password)
 
     if(!isValidPassword){
-      res.status(400).json({message:'Invalid password'})
+      return res.status(400).json({message:'Invalid password'})
     }
 
     const payload = {id:emailVerify.id, email:emailVerify.email}

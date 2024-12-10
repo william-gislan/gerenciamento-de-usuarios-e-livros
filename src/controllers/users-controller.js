@@ -69,7 +69,7 @@ const userController = {
       return res.status(400).json({message:'Invalid password'})
     }
 
-    const payload = {id:emailVerify.id, email:emailVerify.email}
+    const payload = {id:emailVerify.id, email:emailVerify.email, role:emailVerify.role}
     const token = jwt.sign(payload, process.env.JWT_KEY, {
       expiresIn:"1h"
     })

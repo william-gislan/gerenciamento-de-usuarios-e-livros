@@ -1,8 +1,13 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const usersModel = require('../models/users-model')
+const booksModels = require('../models/books-models')
 
 const admiController = {
+  show:(req, res) => {
+    const books = booksModels.getBooks()
+    res.json(books)
+  },
   registerUser:(req, res) => {
     const { name, email, password, role } = req.body
   
@@ -14,12 +19,13 @@ const admiController = {
     const verifyUser = usersModel.getUserEmail(email)
   
     if(verifyUser){
-      req.status(400).json({message:'User already exists'})
+      res.status(400).json({message:'User already exists'})
     }
   
     const newUser = usersModel.createUser(name, email, password, role)
     res.json({...newUser, password:undefined})
-  }
+  },
+  
 }
 
 

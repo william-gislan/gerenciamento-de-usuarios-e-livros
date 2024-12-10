@@ -27,8 +27,25 @@ const booksController = {
     const book = booksModels.getBookUserEmail(email)
 
     res.status(200).json(book)
-  }
+  },
+  updateBook:(req, res) => {
+    const email = req.user?.email
+    const { id } = req.params
+    const { title, author } = req.body
 
+    const bookIndex = books.findIndex(book => book.id === id)
+
+    if(books[bookIndex].email !== email){
+      res.status(400).json({message:'you are not allowed to change this book'})
+    }
+
+    const updateDate = {}
+    if(title) updateDate.title = title
+    if(author) updateDate.author = author
+
+    const updateBook = booksModels.updateBook(id, updateDate)
+    res.status(201).json({message:'data updated successfully'})
+  }
 }
 
 

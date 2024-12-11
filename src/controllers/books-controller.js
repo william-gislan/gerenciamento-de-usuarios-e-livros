@@ -2,17 +2,17 @@ const books = require("../data/books")
 const { user } = require("../data/books")
 const booksModels = require("../models/books-models")
 
-
-
 const booksController = {
   createBook: (req, res) => {
     const { title,  author, copies } = req.body
     const email = req.user?.email
+  
 
     if(typeof title !== 'string' || typeof author !== 'string'){
       res.status(400).json({message:'Data Incompleted'})
     }
     const bookVerify = booksModels.getBookTitle(title)
+  
 
     if(bookVerify){
       res.status(400).json({message:'Book already exists'})
@@ -45,6 +45,20 @@ const booksController = {
 
     const updateBook = booksModels.updateBook(id, updateDate)
     res.status(201).json({message:'data updated successfully'})
+  },
+  deleteBook:(req, res) => {
+    const { id } = req.params
+    const email = req.user?.email
+
+    const bookIndex = books.findIndex(book => book.id === id)
+
+    if(books[bookIndex].email !== email){
+      res.status(400).json({message:'you are not allowed to change this book'})
+    }
+
+    const bookDeleted = booksController.deleteBook(id)
+
+    res.status(201).json(bookDeleted)
   }
 }
 

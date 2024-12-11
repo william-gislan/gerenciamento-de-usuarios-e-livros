@@ -10,6 +10,11 @@ const admiController = {
   },
   registerUser:(req, res) => {
     const { name, email, password, role } = req.body
+    const userRole = req.user?.role
+
+    if(userRole !== 'admin'){
+      res.status(400).json({message:'Permission Danied'})
+    }
   
     if(typeof name !== 'string' || typeof email !== 'string' || typeof password !== 'string' || typeof role !== 'string'){
       res.status(400).json({message:'Data incompleted'})
@@ -27,7 +32,5 @@ const admiController = {
   },
   
 }
-
-
 
 module.exports = admiController
